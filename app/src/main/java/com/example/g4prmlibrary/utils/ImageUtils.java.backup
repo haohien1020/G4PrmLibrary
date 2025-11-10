@@ -1,0 +1,76 @@
+package com.example.library.utils;
+
+import android.content.Context;
+import android.os.Handler;
+import android.os.Looper;
+import android.util.LruCache;
+import android.widget.ImageView;
+
+import com.example.library.R;
+
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+public class ImageUtils {
+    private static LruCache<String, Integer> imageResourceCache;
+    private static ExecutorService imageExecutor;
+    private static Handler mainHandler;
+    
+    static {
+        // Initialize cache - cache up to 50 image resource IDs
+        imageResourceCache = new LruCache<String, Integer>(50) {
+            @Override
+            protected int sizeOf(String key, Integer value) {
+                return 1; // Each entry counts as 1
+            }
+        };
+        imageExecutor = Executors.newFixedThreadPool(2);
+        mainHandler = new Handler(Looper.getMainLooper());
+    }
+    
+    public static void loadBookImage(Context context, ImageView imageView, String imageName) {
+        // Set default image immediately
+        imageView.setImageResource(R.drawable.ic_book_placeholder);
+        
+        if (imageName == null || imageName.isEmpty()) {
+            return;
+        }
+        
+        // Check cache first
+        Integer cachedResourceId = imageResourceCache.get(imageName);
+        if (cachedResourceId != null && cachedResourceId != 0) {
+            imageView.setImageResource(cachedResourceId);
+            return;
+        }
+        
+        // Load in background if not cached
+        imageExecutor.execute(() -> {
+            try {
+                int resourceId = context.getResources().getIdentifier(
+                    imageName, "drawable", context.getPackageName());
+                
+                // Cache the result (even if 0)
+                imageResourceCache.put(imageName, resourceId);
+                
+                // Update UI on main thread
+                if (resourceId != 0) {
+                    mainHandler.post(() -> {
+                        try {
+                            imageView.setImageResource(resourceId);
+                        } catch (Exception e) {
+                            // View might be recycled or activity destroyed, ignore
+                        }
+                    });
+                }
+            } catch (Exception e) {
+                // Resource not found or other error, keep default image
+            }
+        });
+    }
+    
+    public static void cleanup() {
+        if (imageExecutor != null && !imageExecutor.isShutdown()) {
+            imageExecutor.shutdown();
+        }
+    }
+}
