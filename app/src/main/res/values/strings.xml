@@ -1,3 +1,8 @@
 <resources>
-    <string name="app_name">G4PrmLibrary</string>
+    <string name="app_name">Library Management</string>
+    <string name="login_title">Đăng nhập</string>
+    <string name="register_title">Đăng ký</string>
+    <string name="welcome_message">Chào mừng bạn đến với Library Management</string>
+    <string name="books_title">Danh sách sách</string>
+    <string name="search_hint">Tìm kiếm sách...</string>
 </resources>
