@@ -42,6 +42,19 @@ dependencies {
     implementation(libs.material)
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
+
+
+
+    // Additional dependencies for Library Management
+    implementation("androidx.fragment:fragment:1.6.2")
+    implementation("androidx.recyclerview:recyclerview:1.3.2")
+    implementation("androidx.cardview:cardview:1.0.0")
+    implementation("com.google.android.material:material:1.11.0")
+    implementation("androidx.viewpager2:viewpager2:1.0.0")
+    implementation("androidx.coordinatorlayout:coordinatorlayout:1.2.0")
+    implementation("de.hdodenhof:circleimageview:3.1.0")
+
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

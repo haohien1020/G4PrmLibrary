@@ -6,7 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.util.Log;
 
-import com.example.library.LoginActivity;
+import com.example.g4prmlibrary.authentication.LoginActivity;
 
 /**
  * Utility để quản lý force logout mechanism
